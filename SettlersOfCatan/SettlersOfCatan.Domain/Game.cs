@@ -2,27 +2,28 @@
 using SettlersOfCatan.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SettlersOfCatan.Domain
 {
-    public class Game
+    public class Game : IdentifiableBase
     {
         public List<Player> Players { get; }
-        public int NumberOfTurns { get; private set; }
-        public Player WhoseTurnIsIt { get; }
-        public Dictionary<ResourceType, int> AvailableResources { get; } = new Dictionary<ResourceType, int>();
         
-
-        public List<DevelopmentCardType> DevelopmentCards { get; } = new List<DevelopmentCardType>();
-
-        public Game(List<Player> players, Dictionary<ResourceType,int> availableResources, List<DevelopmentCardType> developmentCards)
+        public int NumberOfTurns { get; private set; }
+        
+        public Player WhoseTurnIsIt { get; }       
+        
+        public List<DevelopmentCardType> DevelopmentCards { get; }
+        
+        public Dictionary<PlayerColor, Dictionary<BuildableType, int>> BuildablePool { get; }
+        
+        public Game(List<Player> players, List<DevelopmentCardType> developmentCards, Dictionary<PlayerColor, Dictionary<BuildableType, int>> buildablePool)
         {
             Players = players;
-            AvailableResources = availableResources;
             DevelopmentCards = developmentCards;
+            BuildablePool = BuildablePool;
         }
+
         public Dictionary<DiceColor, int> RoleDice()
         {
             Random random = new Random();

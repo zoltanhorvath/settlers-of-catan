@@ -1,19 +1,30 @@
 ﻿using SettlersOfCatan.Domain.Enums;
-using System.Collections.Generic;
 
 namespace SettlersOfCatan.Domain
 {
-    public class Hexagon
+    public class Hexagon : IdentifiableBase
     {
-        public TerrainType Terrain { get;}
-        public int Number { get; }
-        public List<Vertex> Vertices { get; }
+        public TerrainType Terrain { get; set; }
+        
+        public int Number { get; set; }
 
-        public Hexagon(TerrainType terrain, int number, List<Vertex> vertices)
+        public Vertex[] Vertices { get; } = new Vertex[6];
+       
+        public Edge[] Edges { get; } = new Edge[6];
+
+        public Hexagon[] Neighbours { get; } = new Hexagon[6];
+
+        public bool HasRobber { get; set; }  
+         
+        public void ProduceResource()
         {
-            Terrain = terrain;
-            Number = number;
-            Vertices = vertices;
+            if (!HasRobber)
+            {              
+                foreach (var vertex in Vertices)
+                {
+                    vertex.Settlement.ProduceResource(Terrain);
+                }
+            }           
         }
     }
 }

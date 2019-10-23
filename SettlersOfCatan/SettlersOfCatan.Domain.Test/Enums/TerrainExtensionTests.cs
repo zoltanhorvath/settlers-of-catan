@@ -15,7 +15,7 @@ namespace SettlersOfCatan.Domain.Test.Enums
         [InlineData(TerrainType.Desert, ResourceType.Nothing)]
         public void TerrainProductionTest(TerrainType terrainType, ResourceType expectedResourceType)
         {
-            var resourceType = terrainType.ProduceResource();
+            var resourceType = terrainType.GetResourceType();
             resourceType.Should().Be(expectedResourceType);
         }
     }

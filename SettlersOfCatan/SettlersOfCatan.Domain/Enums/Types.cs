@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace SettlersOfCatan.Domain.Enums
+﻿namespace SettlersOfCatan.Domain.Enums
 {
     public enum TerrainType
     {
@@ -22,12 +19,22 @@ namespace SettlersOfCatan.Domain.Enums
         Nothing
     }
 
-    public static class TerrainExtension
+    public enum BuildableType
     {
-        public static ResourceType ProduceResource(this TerrainType terrainType)
-        {
-            var resourceValues = Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>().ToList();
-            return resourceValues[(int)terrainType];
-        }
+        City,
+        Road,
+        Settlement
+    }
+
+    public enum TradingCapabilityType
+    {
+        Brick,
+        Wool,
+        Ore,
+        Grain,
+        Lumber,
+        FourToOne,
+        ThreeToOne,
+        None
     }
 }

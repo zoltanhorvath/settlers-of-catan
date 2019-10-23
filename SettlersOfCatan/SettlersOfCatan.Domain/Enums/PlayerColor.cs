@@ -1,11 +1,10 @@
-﻿using System;
-namespace SettlersOfCatan.Domain.Enums
+﻿namespace SettlersOfCatan.Domain.Enums
 {
     public enum PlayerColor
     {
+        Blue,
         Red,
         Green,
         Yellow,
-        Blue
     }
 }

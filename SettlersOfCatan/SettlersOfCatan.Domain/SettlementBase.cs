@@ -2,25 +2,26 @@
 
 namespace SettlersOfCatan.Domain
 {
-    public abstract class SettlementBase
+    public abstract class SettlementBase : IdentifiableBase
     {
-        abstract public int VictoryPoint { get; }
-        
+        private int _resourceProductionMultiplier;
+
+        public int VictoryPoint { get; }
+
         public Player Owner { get; }
 
-        private int _amount;
-
-        public SettlementBase(Player owner, int amount)
+        public SettlementBase(Player owner, int resourceProductionMultiplier, int victoryPoint)
         {
             Owner = owner;
-            _amount = amount;
+            _resourceProductionMultiplier = resourceProductionMultiplier;
+            VictoryPoint = victoryPoint;
         }
-        
+
         public void ProduceResource(TerrainType terrainType)
         {
-            var resourceType = terrainType.ProduceResource();
-            Owner.AddResource(resourceType, _amount);
+            var resourceType = terrainType.GetResourceType();
+            Owner.AddResource(resourceType, _resourceProductionMultiplier);
         }
-      
+
     }
 }

@@ -36,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <SpecFlowFeatureFiles Update="MapCreator.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+    </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="ResourceProductionPipeline.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ResourceProductionPipeline.feature.cs</LastGenOutput>

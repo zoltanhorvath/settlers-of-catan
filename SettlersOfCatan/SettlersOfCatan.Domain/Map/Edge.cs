@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SettlersOfCatan.Domain
+﻿namespace SettlersOfCatan.Domain
 {
-    public class Edge
+    public class Edge : IdentifiableBase
     {
-        public List<Vertex> Vertices { get; set; } = new List<Vertex>(3);
+        public Vertex[] Vertices { get; } = new Vertex[2];
+        
+        public Road Road { get; set; }
+            
     }
 }
