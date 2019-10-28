@@ -37,4 +37,13 @@
         ThreeToOne,
         None
     }
+    public enum Direction
+    {
+        NorthEast,
+        East,
+        SouthEast,
+        SouthWest,
+        West,
+        NorthWest
+    }
 }

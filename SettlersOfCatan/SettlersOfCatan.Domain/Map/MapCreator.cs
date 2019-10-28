@@ -13,8 +13,8 @@ namespace SettlersOfCatan.Domain.Map
 
         public int CompareTo(Coordinates otherCoordinates)
         {
-            var current = X * 100 + Y * 10 + Z;
-            var other = otherCoordinates.X * 100 + otherCoordinates.Y * 10 + otherCoordinates.Z;
+            var current = 100 * Z + 10 * X + Y;
+            var other = otherCoordinates.Z * 100 + otherCoordinates.X * 10 + otherCoordinates.Y;
             return current - other;
         }
 
@@ -56,8 +56,10 @@ namespace SettlersOfCatan.Domain.Map
         private List<TerrainType> AvailableTerrainTypes = new List<TerrainType>();
 
         private SortedDictionary<Coordinates, Hexagon> coMap = new SortedDictionary<Coordinates, Hexagon>();
-
-
+        private List<Direction> DirectionsToCheck = new List<Direction>
+        {
+            Direction.SouthEast, Direction.SouthWest, Direction.West
+        };
 
         public SortedDictionary<Coordinates, Hexagon> BuildMap()
         {
@@ -69,31 +71,48 @@ namespace SettlersOfCatan.Domain.Map
                     {
                         if (i + j + k == 0)
                         {
-                            coMap.Add(new Coordinates { X = i, Y = j, Z = k }, new Hexagon());
+                            var hexagon = new Hexagon();
+                            var coordinates = new Coordinates { X = i, Y = j, Z = k };
+                            coMap.Add(coordinates, hexagon);
+                            
                         }
                     }
                 }
             }
-
             foreach (var kvp in coMap)
             {
-                var coordinates = kvp.Key;
-                var hexagon = kvp.Value;
-
-
+                CreateVertices(kvp.Key, kvp.Value);
             }
             return coMap;
         }
 
-        private int[,] offsets = new int[,]
+        private void CreateVertices(Coordinates coordinates, Hexagon hexagon)
         {
-            { 1, -1, 0 },
-            { 1, 0, -1 },
-            { 0, 1, 0 },
-            { -1, +1, 0 },
-            { -1, 0, 1 },
-            { 0, -1, 1 },
-        };
+            for (var i = 0; i < 2; i++)
+            {
+                hexagon.Vertices[i] = new Vertex();
+            }
+            foreach (Direction direction in DirectionsToCheck)
+            {
+                var coordinateOfNeightbourInDirection = direction.GetNeighbourCoordinates(coordinates);
+                if (coMap.TryGetValue(coordinateOfNeightbourInDirection, out var neighbourHexagon))
+                {
+                    var index = (int)direction;
+                    hexagon.Vertices[index] = neighbourHexagon.Vertices[index - 2];
+                    index++;
+                    hexagon.Vertices[index] = neighbourHexagon.Vertices[index - 2];
+                }
+                else
+                {
+                    var index = (int)direction;
+                    hexagon.Vertices[index] = new Vertex();
+                    index = index++ % 6;
+                    hexagon.Vertices[index] = new Vertex();
+                }
+            }
+        }
+
+
         private void AssignVerticesToEdge(int i, Hexagon hexagon)
         {
             var edge = hexagon.Edges[i];

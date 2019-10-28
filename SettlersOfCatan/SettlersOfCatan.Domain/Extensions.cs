@@ -1,4 +1,5 @@
 ﻿using SettlersOfCatan.Domain.Enums;
+using SettlersOfCatan.Domain.Map;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,31 @@ namespace SettlersOfCatan.Domain
             var terrainType = terrainTypes[0];
             terrainTypes.RemoveAt(0);
             return terrainType;
+        }
+
+        public static Coordinates GetNeighbourCoordinates(this Direction direction, Coordinates coordinates)
+        {
+            var x = coordinates.X;
+            var y = coordinates.Y;
+            var z = coordinates.Z;
+
+            switch (direction)
+            {
+                case Direction.NorthEast:
+                    x++; y--; break;
+                case Direction.East:
+                    x++; z--; break;
+                case Direction.SouthEast:
+                    y++; z--; break;
+                case Direction.SouthWest:
+                    x--; y++; break;
+                case Direction.West:
+                    x--; z++; break;
+                case Direction.NorthWest:
+                    y--; z++; break;
+
+            }
+            return new Coordinates { X = x, Y = y, Z = z };
         }
     }
 }
