@@ -1,44 +1,10 @@
 ﻿using SettlersOfCatan.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SettlersOfCatan.Domain.Map
 {
-    public class Coordinates : IEquatable<Coordinates>, IComparable<Coordinates>
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
-
-        public int CompareTo(Coordinates otherCoordinates)
-        {
-            var current = 100 * Z + 10 * X + Y;
-            var other = otherCoordinates.Z * 100 + otherCoordinates.X * 10 + otherCoordinates.Y;
-            return current - other;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Coordinates);
-        }
-
-        public bool Equals([AllowNull] Coordinates other)
-        {
-            return other != null &&
-                   X == other.X &&
-                   Y == other.Y &&
-                   Z == other.Z;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y, Z);
-        }
-
-
-    }
-    public class MapCreator
+    public class BasicMapCreator : IMapCreator
     {
         private Dictionary<TerrainType, int> numberOfDifferentTerrainTypes = new Dictionary<TerrainType, int>
         {
@@ -54,14 +20,9 @@ namespace SettlersOfCatan.Domain.Map
         private int MIN = (5 / 2) * -1;
 
         private List<TerrainType> AvailableTerrainTypes = new List<TerrainType>();
-
         private SortedDictionary<Coordinates, Hexagon> coMap = new SortedDictionary<Coordinates, Hexagon>();
-        private List<Direction> DirectionsToCheck = new List<Direction>
-        {
-            Direction.SouthEast, Direction.SouthWest, Direction.West
-        };
 
-        public SortedDictionary<Coordinates, Hexagon> BuildMap()
+        public SortedDictionary<Coordinates, Hexagon> Create()
         {
             for (var i = MIN; i < MAX; i++)
             {
@@ -74,7 +35,6 @@ namespace SettlersOfCatan.Domain.Map
                             var hexagon = new Hexagon();
                             var coordinates = new Coordinates { X = i, Y = j, Z = k };
                             coMap.Add(coordinates, hexagon);
-                            
                         }
                     }
                 }
@@ -88,30 +48,52 @@ namespace SettlersOfCatan.Domain.Map
 
         private void CreateVertices(Coordinates coordinates, Hexagon hexagon)
         {
-            for (var i = 0; i < 2; i++)
+            bool wasPrevious = false;
+
+            foreach (Direction direction in Enum.GetValues(typeof(Direction)))
             {
-                hexagon.Vertices[i] = new Vertex();
-            }
-            foreach (Direction direction in DirectionsToCheck)
-            {
+                var index = (int)direction;
                 var coordinateOfNeightbourInDirection = direction.GetNeighbourCoordinates(coordinates);
                 if (coMap.TryGetValue(coordinateOfNeightbourInDirection, out var neighbourHexagon))
                 {
-                    var index = (int)direction;
-                    hexagon.Vertices[index] = neighbourHexagon.Vertices[index - 2];
-                    index++;
-                    hexagon.Vertices[index] = neighbourHexagon.Vertices[index - 2];
+                    int indexInNeighbour;
+                    if (!wasPrevious)
+                    {
+                        indexInNeighbour = GetIndexInNeighbour(index, 4);
+                        hexagon.Vertices[index] = neighbourHexagon.Vertices[indexInNeighbour];
+                    }
+                    index = (index + 1) % 6;
+                    indexInNeighbour = GetIndexInNeighbour(index, 2);
+                    hexagon.Vertices[index] = neighbourHexagon.Vertices[indexInNeighbour];
+                    wasPrevious = true;
                 }
                 else
                 {
-                    var index = (int)direction;
-                    hexagon.Vertices[index] = new Vertex();
-                    index = index++ % 6;
-                    hexagon.Vertices[index] = new Vertex();
+                    var edge = new Edge();
+                    for (var i = 0; i < 2; i++)
+                    {
+                        var vertex = new Vertex();
+                        edge.Vertices.Push(vertex);
+                        vertex.Edges[TranslateToEdgeIndex(index)] = edge;
+                        hexagon.Vertices[index] = vertex;
+                        index = (index + 1) % 6;
+                    }
+                    wasPrevious = false;
                 }
             }
         }
 
+        private int TranslateToEdgeIndex(int index)
+        {
+            var remainder = index % 3;
+            switch (remainder)
+            {
+                case 0: return 1;
+                case 1: return 0;
+                case 2: return 2;
+                default: throw new ArgumentException();
+            }
+        }
 
         private void AssignVerticesToEdge(int i, Hexagon hexagon)
         {
@@ -147,11 +129,11 @@ namespace SettlersOfCatan.Domain.Map
             AvailableTerrainTypes.Shuffle();
         }
 
-        private void FirstRow()
+        private int GetIndexInNeighbour(int index, int offset)
         {
-            var hexagon = new Hexagon();
-
+            return (index + offset) % 6;
         }
+
         /*
        private void s()
        {
@@ -203,7 +185,7 @@ namespace SettlersOfCatan.Domain.Map
                }
 
            }
-           
+
         Map.Add(hexagon.Id, hexagon);
             Hexagons.Add(hexagon);
         }
@@ -215,5 +197,6 @@ namespace SettlersOfCatan.Domain.Map
                 Terrain = AvailableTerrainTypes.Pop()
             };
         }
+
     }
 }

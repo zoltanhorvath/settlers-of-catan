@@ -40,8 +40,7 @@ namespace SettlersOfCatan.Domain.Test
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "MapCreator", "\tIn order to avoid silly mistakes\r\n\tAs a math idiot\r\n\tI want to be told the sum o" +
-                    "f two numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "MapCreator", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -81,17 +80,14 @@ namespace SettlersOfCatan.Domain.Test
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Add two numbers")]
+        [Xunit.SkippableFactAttribute(DisplayName="Generate map")]
         [Xunit.TraitAttribute("FeatureTitle", "MapCreator")]
-        [Xunit.TraitAttribute("Description", "Add two numbers")]
-        [Xunit.TraitAttribute("Category", "mytag")]
-        public virtual void AddTwoNumbers()
+        [Xunit.TraitAttribute("Description", "Generate map")]
+        public virtual void GenerateMap()
         {
-            string[] tagsOfScenario = new string[] {
-                    "mytag"};
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add two numbers", null, new string[] {
-                        "mytag"});
-#line 7
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Generate map", null, ((string[])(null)));
+#line 3
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -111,17 +107,95 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 8
- testRunner.Given("I have entered 50 into the calculator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 4
+ testRunner.Given("a BasicMapCreator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 9
- testRunner.And("I have entered 70 into the calculator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 5
+ testRunner.When("I call Create() on the BasicMapCreator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 10
- testRunner.When("I press add", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 11
- testRunner.Then("the result should be 120 on the screen", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                            "X",
+                            "Y",
+                            "Z"});
+                table1.AddRow(new string[] {
+                            "2",
+                            "-2",
+                            "0"});
+                table1.AddRow(new string[] {
+                            "2",
+                            "-1",
+                            "1"});
+                table1.AddRow(new string[] {
+                            "2",
+                            "0",
+                            "-2"});
+                table1.AddRow(new string[] {
+                            "1",
+                            "-2",
+                            "1"});
+                table1.AddRow(new string[] {
+                            "1",
+                            "-1",
+                            "0"});
+                table1.AddRow(new string[] {
+                            "1",
+                            "0",
+                            "-1"});
+                table1.AddRow(new string[] {
+                            "1",
+                            "1",
+                            "-2"});
+                table1.AddRow(new string[] {
+                            "0",
+                            "-2",
+                            "2"});
+                table1.AddRow(new string[] {
+                            "0",
+                            "-1",
+                            "-1"});
+                table1.AddRow(new string[] {
+                            "0",
+                            "0",
+                            "0"});
+                table1.AddRow(new string[] {
+                            "0",
+                            "1",
+                            "-1"});
+                table1.AddRow(new string[] {
+                            "0",
+                            "2",
+                            "-2"});
+                table1.AddRow(new string[] {
+                            "-1",
+                            "-1",
+                            "2"});
+                table1.AddRow(new string[] {
+                            "-1",
+                            "0",
+                            "1"});
+                table1.AddRow(new string[] {
+                            "-1",
+                            "1",
+                            "0"});
+                table1.AddRow(new string[] {
+                            "-1",
+                            "2",
+                            "-1"});
+                table1.AddRow(new string[] {
+                            "-2",
+                            "0",
+                            "2"});
+                table1.AddRow(new string[] {
+                            "-2",
+                            "1",
+                            "1"});
+                table1.AddRow(new string[] {
+                            "-2",
+                            "2",
+                            "0"});
+#line 6
+ testRunner.Then("the BasicMapCreator should return a SortedDictionary(Coordinates, Hexagon) sorted" +
+                        " by coordinates in the following order", ((string)(null)), table1, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

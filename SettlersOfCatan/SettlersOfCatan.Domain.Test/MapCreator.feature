@@ -1,11 +1,26 @@
 ﻿Feature: MapCreator
-	In order to avoid silly mistakes
-	As a math idiot
-	I want to be told the sum of two numbers
 
-@mytag
-Scenario: Add two numbers
-	Given I have entered 50 into the calculator
-	And I have entered 70 into the calculator
-	When I press add
-	Then the result should be 120 on the screen
+Scenario: Generate map
+	Given a BasicMapCreator
+	When I call Create() on the BasicMapCreator
+	Then the BasicMapCreator should return a SortedDictionary(Coordinates, Hexagon) sorted by coordinates in the following order
+		| X  | Y  | Z  |
+		| 2  | -2 | 0  |
+		| 2  | -1 | 1  |
+		| 2  | 0  | -2 |
+		| 1  | -2 | 1  |
+		| 1  | -1 | 0  |
+		| 1  | 0  | -1 |
+		| 1  | 1  | -2 |
+		| 0  | -2 | 2  |
+		| 0  | -1 | -1 |
+		| 0  | 0  | 0  |
+		| 0  | 1  | -1 |
+		| 0  | 2  | -2 |
+		| -1 | -1 | 2  |
+		| -1 | 0  | 1  |
+		| -1 | 1  | 0  |
+		| -1 | 2  | -1 |
+		| -2 | 0  | 2  |
+		| -2 | 1  | 1  |
+		| -2 | 2  | 0  |

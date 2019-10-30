@@ -66,17 +66,17 @@ namespace SettlersOfCatan.Domain
             switch (direction)
             {
                 case Direction.NorthEast:
-                    x++; y--; break;
-                case Direction.East:
                     x++; z--; break;
-                case Direction.SouthEast:
+                case Direction.East:
                     y++; z--; break;
-                case Direction.SouthWest:
+                case Direction.SouthEast:
                     x--; y++; break;
-                case Direction.West:
+                case Direction.SouthWest:
                     x--; z++; break;
-                case Direction.NorthWest:
+                case Direction.West:
                     y--; z++; break;
+                case Direction.NorthWest:
+                    x++; y--; break;
 
             }
             return new Coordinates { X = x, Y = y, Z = z };

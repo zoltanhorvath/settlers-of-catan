@@ -111,14 +111,14 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                             "Name",
                             "Color"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Sam",
                             "Red"});
 #line 8
- testRunner.Given("a player", ((string)(null)), table1, "Given ");
+ testRunner.Given("a player", ((string)(null)), table2, "Given ");
 #line hidden
 #line 11
  testRunner.And("without any resources", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -126,25 +126,25 @@ this.ScenarioInitialize(scenarioInfo);
 #line 12
  testRunner.And("a village owner by the given player", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                             "TerrainType"});
-                table2.AddRow(new string[] {
+                table3.AddRow(new string[] {
                             "Hills"});
 #line 13
- testRunner.And("a terrainType", ((string)(null)), table2, "And ");
+ testRunner.And("a terrainType", ((string)(null)), table3, "And ");
 #line hidden
 #line 16
  testRunner.When("the ProduceResource method is being called with the given TerrainType on the vill" +
                         "age", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                             "ResourceType",
                             "Amount"});
-                table3.AddRow(new string[] {
+                table4.AddRow(new string[] {
                             "Brick",
                             "1"});
 #line 17
- testRunner.Then("should be added to the player\'s resources.", ((string)(null)), table3, "Then ");
+ testRunner.Then("should be added to the player\'s resources.", ((string)(null)), table4, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -180,61 +180,61 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-                TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                             "Name",
                             "Color"});
-                table4.AddRow(new string[] {
+                table5.AddRow(new string[] {
                             "Sam",
                             "Red"});
 #line 23
- testRunner.Given("a player", ((string)(null)), table4, "Given ");
+ testRunner.Given("a player", ((string)(null)), table5, "Given ");
 #line hidden
-                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                             "key",
                             "value"});
-                table5.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "Grain",
                             "3"});
-                table5.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "Wool",
                             "4"});
-                table5.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "Lumber",
                             "6"});
 #line 26
- testRunner.And("some resources", ((string)(null)), table5, "And ");
+ testRunner.And("some resources", ((string)(null)), table6, "And ");
 #line hidden
 #line 31
  testRunner.And("a village owner by the given player", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                             "TerrainType"});
-                table6.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Hills"});
 #line 32
- testRunner.And("a terrainType", ((string)(null)), table6, "And ");
+ testRunner.And("a terrainType", ((string)(null)), table7, "And ");
 #line hidden
 #line 35
  testRunner.When("the ProduceResource method is being called with the given TerrainType on the vill" +
                         "age", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-                TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                             "ResourceType",
                             "Amount"});
-                table7.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Grain",
                             "3"});
-                table7.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Wool",
                             "4"});
-                table7.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Lumber",
                             "6"});
-                table7.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Brick",
                             "1"});
 #line 36
- testRunner.Then("the player should have the following resources", ((string)(null)), table7, "Then ");
+ testRunner.Then("the player should have the following resources", ((string)(null)), table8, "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
