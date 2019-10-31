@@ -81,5 +81,22 @@ namespace SettlersOfCatan.Domain
             }
             return new Coordinates { X = x, Y = y, Z = z };
         }
+
+        public static int TranslateToEdgeIndex(this Direction direction)
+        {
+            var remainder = (int)direction % 3;
+            return remainder switch
+            {
+                0 => 1,
+                1 => 0,
+                2 => 2,
+                _ => throw new ArgumentException(),
+            };
+        }
+
+        public static int TranslateToNeighbourVertexIndex(this Direction direction, int offset)
+        {
+            return ((int)direction + offset) % 6;
+        }
     }
 }

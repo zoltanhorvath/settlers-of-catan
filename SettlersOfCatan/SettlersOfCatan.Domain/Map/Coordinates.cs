@@ -44,5 +44,12 @@ namespace SettlersOfCatan.Domain.Map
             return HashCode.Combine(X, Y, Z);
         }
 
+        public bool IsWithinBoudaries(MapSettings mapSettings)
+        {
+            return X >= mapSettings.MinimumCoordinateValue && X <= mapSettings.MaximumCoordianteValue
+                && Y >= mapSettings.MinimumCoordinateValue && Y <= mapSettings.MaximumCoordianteValue
+                && Z >= mapSettings.MinimumCoordinateValue && Z <= mapSettings.MaximumCoordianteValue;
+        }
+
     }
 }

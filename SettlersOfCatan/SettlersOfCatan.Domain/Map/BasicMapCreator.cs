@@ -22,6 +22,11 @@ namespace SettlersOfCatan.Domain.Map
         private List<TerrainType> AvailableTerrainTypes = new List<TerrainType>();
         private SortedDictionary<Coordinates, Hexagon> coMap = new SortedDictionary<Coordinates, Hexagon>();
 
+        private List<Direction> DirectionsToCheck = new List<Direction>
+        {
+            Direction.West, Direction.NorthWest, Direction.NorthEast
+        };
+
         public SortedDictionary<Coordinates, Hexagon> Create()
         {
             for (var i = MIN; i < MAX; i++)
@@ -48,51 +53,47 @@ namespace SettlersOfCatan.Domain.Map
 
         private void CreateVertices(Coordinates coordinates, Hexagon hexagon)
         {
-            bool wasPrevious = false;
+
+            Vertex previousVertex = null;
+            Hexagon previousNeighbourHexagon = null;
 
             foreach (Direction direction in Enum.GetValues(typeof(Direction)))
             {
+                if (direction == Direction.West || direction == Direction.NorthWest || direction == Direction.NorthEast)
+                {
+                    var neighbourHexagonCoordinates = direction.GetNeighbourCoordinates(coordinates);
+                    if (coMap.TryGetValue(neighbourHexagonCoordinates, out var neighbourHexagon))
+                    {
+
+                    }
+                }
                 var index = (int)direction;
-                var coordinateOfNeightbourInDirection = direction.GetNeighbourCoordinates(coordinates);
-                if (coMap.TryGetValue(coordinateOfNeightbourInDirection, out var neighbourHexagon))
+                var vertex = new Vertex();
+                var edge = new Edge();
+
+                edge.Vertices.Push(vertex);
+                vertex.Edges[TranslateToEdgeIndex(index)] = edge;
+                hexagon.Vertices[index] = vertex;
+
+                if (previousVertex != null)
                 {
-                    int indexInNeighbour;
-                    if (!wasPrevious)
-                    {
-                        indexInNeighbour = GetIndexInNeighbour(index, 4);
-                        hexagon.Vertices[index] = neighbourHexagon.Vertices[indexInNeighbour];
-                    }
-                    index = (index + 1) % 6;
-                    indexInNeighbour = GetIndexInNeighbour(index, 2);
-                    hexagon.Vertices[index] = neighbourHexagon.Vertices[indexInNeighbour];
-                    wasPrevious = true;
+                    vertex.Edges[TranslateToEdgeIndex(index - 1)] = previousVertex.Edges[TranslateToEdgeIndex(index - 1)];
                 }
-                else
-                {
-                    var edge = new Edge();
-                    for (var i = 0; i < 2; i++)
-                    {
-                        var vertex = new Vertex();
-                        edge.Vertices.Push(vertex);
-                        vertex.Edges[TranslateToEdgeIndex(index)] = edge;
-                        hexagon.Vertices[index] = vertex;
-                        index = (index + 1) % 6;
-                    }
-                    wasPrevious = false;
-                }
+                previousVertex = vertex;
+
             }
         }
 
         private int TranslateToEdgeIndex(int index)
         {
             var remainder = index % 3;
-            switch (remainder)
+            return remainder switch
             {
-                case 0: return 1;
-                case 1: return 0;
-                case 2: return 2;
-                default: throw new ArgumentException();
-            }
+                0 => 1,
+                1 => 0,
+                2 => 2,
+                _ => throw new ArgumentException(),
+            };
         }
 
         private void AssignVerticesToEdge(int i, Hexagon hexagon)
@@ -131,7 +132,7 @@ namespace SettlersOfCatan.Domain.Map
 
         private int GetIndexInNeighbour(int index, int offset)
         {
-            return (index + offset) % 6;
+            return Math.Abs(index + offset);
         }
 
         /*
