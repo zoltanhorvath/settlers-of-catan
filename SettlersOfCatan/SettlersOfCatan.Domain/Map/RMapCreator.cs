@@ -7,7 +7,7 @@ namespace SettlersOfCatan.Domain.Map
     public class RMapCreator
     {
         private List<Coordinates> _coordinates = new List<Coordinates>();
-        public Hexagon Create()
+        public MapSettings Create()
         {
             var hexagon = new Hexagon
             {
@@ -16,7 +16,7 @@ namespace SettlersOfCatan.Domain.Map
             var mapSettings = new MapSettings(-2, 2);
             mapSettings.Map.Add(hexagon.Coordinates, hexagon);
             hexagon.G(mapSettings);
-            return hexagon;
+            return mapSettings;
         }
 
 

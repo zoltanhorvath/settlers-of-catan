@@ -1,12 +1,16 @@
-﻿using SettlersOfCatan.Domain.Enums;
-using SettlersOfCatan.Domain.Map;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using SettlersOfCatan.Domain.Enums;
+using SettlersOfCatan.Domain.Map;
 
 namespace SettlersOfCatan.Domain
 {
     public class Hexagon : IdentifiableBase
     {
+        private bool IsInitialized;
         public Coordinates Coordinates { get; set; }
 
         public TerrainType Terrain { get; set; }
@@ -24,86 +28,70 @@ namespace SettlersOfCatan.Domain
         public void ProduceResource()
         {
             if (!HasRobber)
-            {
                 foreach (var vertex in Vertices)
-                {
                     vertex.Settlement.ProduceResource(Terrain);
-                }
-            }
         }
 
         public void G(MapSettings mapSetting)
         {
-            CreateNeighbours(mapSetting);
-            AssignVertices();
+            if (!IsInitialized)
+            {
+                CreateOrAssignNeighbors(mapSetting);
+                CreateOrAssignVerticesAndEdgesFromNeighbour();
+                ConnectVerticesAndEdges();
+                IsInitialized = true;
+                Console.WriteLine(ToString());
+                foreach (var neighbor in Neighbours) neighbor?.G(mapSetting);
+            }
         }
 
-        private void CreateNeighbours(MapSettings mapSettings)
+        private void CreateOrAssignNeighbors(MapSettings mapSettings)
         {
             foreach (Direction direction in Enum.GetValues(typeof(Direction)))
             {
                 var directionAsInt = (int)direction;
-                var neighbourHexagonCoordinates = direction.GetNeighbourCoordinates(Coordinates);
-                if (neighbourHexagonCoordinates.IsWithinBoudaries(mapSettings))
+                var neighborHexagonCoordinates = direction.GetNeighbourCoordinates(Coordinates);
+                if (neighborHexagonCoordinates.IsWithinBoudaries(mapSettings))
                 {
-                    bool alreadyExists = mapSettings.Map.TryGetValue(neighbourHexagonCoordinates, out Hexagon neighbourHexagon);
+                    var alreadyExists =
+                        mapSettings.Map.TryGetValue(neighborHexagonCoordinates, out var neighborHexagon);
                     if (!alreadyExists)
                     {
-                        neighbourHexagon = new Hexagon { Coordinates = neighbourHexagonCoordinates };
-                        mapSettings.Map.Add(neighbourHexagonCoordinates, neighbourHexagon);
+                        neighborHexagon = new Hexagon { Coordinates = neighborHexagonCoordinates };
+                        mapSettings.Map.Add(neighborHexagonCoordinates, neighborHexagon);
                     }
-                    Neighbours[directionAsInt] = neighbourHexagon;
+
+                    Neighbours[directionAsInt] = neighborHexagon;
                 }
             }
         }
 
-        private void AssignVertices()
+        private void CreateOrAssignVerticesAndEdgesFromNeighbour()
+        {
+            foreach (int direction in Enum.GetValues(typeof(Direction)))
+            {
+                Vertices[direction] = Neighbours[direction]?.Vertices[GetIndex(direction, 4)] ?? new Vertex();
+                Edges[direction] = Neighbours[direction]?.Edges[GetIndex(direction, 3)] ?? new Edge();
+            }
+        }
+
+
+        private void ConnectVerticesAndEdges()
         {
             foreach (Direction direction in Enum.GetValues(typeof(Direction)))
             {
                 var directionAsInt = (int)direction;
-                var edge = new Edge();
-                var vertex = new Vertex();
-                Vertices[directionAsInt] = vertex;
-                Edges[directionAsInt] = edge;
-                edge.Vertices.Push(vertex);
-                vertex.Edges[direction.TranslateToEdgeIndex()] = edge;
-                if (directionAsInt - 1 >= 0)
+
+                var currentVertex = Vertices[directionAsInt];
+                var nextVertex = Vertices[GetIndex(directionAsInt, 1)];
+                var edgeIndex = direction.TranslateToEdgeIndex();
+                if (currentVertex.Edges[edgeIndex] == null && nextVertex.Edges[edgeIndex] == null)
                 {
-
-                }
-
-
-
-                var neighbour = Neighbours[directionAsInt];
-                if (neighbour != null)
-                {
-                    for (var i = 0; i < 2; i++)
-                    {
-                        var calculatedIndex = GetIndex(directionAsInt, i);
-                        var vertex = neighbour.Vertices[GetIndex(calculatedIndex, 4 - 2 * i)];
-                        if (vertex == null)
-                        {
-                            vertex = new Vertex();
-                        }
-                        else
-                        {
-                            Vertices[directionAsInt] = vertex;
-                        }
-                    }
-                }
-                else
-                {
-                    Edge edge = new Edge();
-                    Edges[directionAsInt] = edge;
-                    for (var i = 0; i < 2; i++)
-                    {
-                        var calculatedIndex = GetIndex(directionAsInt, i);
-                        var vertex = new Vertex();
-                        vertex.Edges.Push(edge);
-                        edge.Vertices.Push(vertex);
-                        Vertices[calculatedIndex] = vertex;
-                    }
+                    var edge = Edges[directionAsInt];
+                    edge.Vertices.Push(currentVertex);
+                    edge.Vertices.Push(nextVertex);
+                    currentVertex.Edges[direction.TranslateToEdgeIndex()] = edge;
+                    nextVertex.Edges[direction.TranslateToEdgeIndex()] = edge;
                 }
             }
         }
@@ -114,31 +102,23 @@ namespace SettlersOfCatan.Domain
 
             offset %= 6;
 
-            if (offset < 0)
-            {
-                return (6 + offset + i) % 6;
-            }
+            if (offset < 0) return (6 + offset + i) % 6;
             return (i + offset) % 6;
         }
-        private void CreateTwoVerticesWith()
-        {
-
-        }
-
     }
 
     public class MapSettings
     {
-        public int MinimumCoordinateValue { get; }
-
-        public int MaximumCoordianteValue { get; }
-
-        public SortedDictionary<Coordinates, Hexagon> Map { get; } = new SortedDictionary<Coordinates, Hexagon>();
-
-        public MapSettings(int minimumCoordinateValue, int maximuCoordianteValue)
+        public MapSettings(int minimumCoordinateValue, int maximumCoordinateValue)
         {
             MinimumCoordinateValue = minimumCoordinateValue;
-            MaximumCoordianteValue = maximuCoordianteValue;
+            MaximumCoordinateValue = maximumCoordinateValue;
         }
+
+        public int MinimumCoordinateValue { get; }
+
+        public int MaximumCoordinateValue { get; }
+
+        public SortedDictionary<Coordinates, Hexagon> Map { get; } = new SortedDictionary<Coordinates, Hexagon>();
     }
 }

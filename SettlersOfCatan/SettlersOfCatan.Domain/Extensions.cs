@@ -1,6 +1,7 @@
 ﻿using SettlersOfCatan.Domain.Enums;
 using SettlersOfCatan.Domain.Map;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,7 +43,7 @@ namespace SettlersOfCatan.Domain
 
         public static void Push<T>(this T[] array, T item)
         {
-            var index = Array.FindIndex<T>(array, item => item == null);
+            var index = Array.FindIndex(array, item => item == null);
             if (index == -1)
             {
                 throw new ArgumentException("Array does not contain a null item.");
@@ -82,17 +83,7 @@ namespace SettlersOfCatan.Domain
             return new Coordinates { X = x, Y = y, Z = z };
         }
 
-        public static int TranslateToEdgeIndex(this Direction direction)
-        {
-            var remainder = (int)direction % 3;
-            return remainder switch
-            {
-                0 => 1,
-                1 => 0,
-                2 => 2,
-                _ => throw new ArgumentException(),
-            };
-        }
+        public static int TranslateToEdgeIndex(this Direction direction) => (int)direction % 3;
 
         public static int TranslateToNeighbourVertexIndex(this Direction direction, int offset)
         {

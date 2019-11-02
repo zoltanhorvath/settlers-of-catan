@@ -46,9 +46,9 @@ namespace SettlersOfCatan.Domain.Map
 
         public bool IsWithinBoudaries(MapSettings mapSettings)
         {
-            return X >= mapSettings.MinimumCoordinateValue && X <= mapSettings.MaximumCoordianteValue
-                && Y >= mapSettings.MinimumCoordinateValue && Y <= mapSettings.MaximumCoordianteValue
-                && Z >= mapSettings.MinimumCoordinateValue && Z <= mapSettings.MaximumCoordianteValue;
+            return X >= mapSettings.MinimumCoordinateValue && X <= mapSettings.MaximumCoordinateValue
+                && Y >= mapSettings.MinimumCoordinateValue && Y <= mapSettings.MaximumCoordinateValue
+                && Z >= mapSettings.MinimumCoordinateValue && Z <= mapSettings.MaximumCoordinateValue;
         }
 
     }
