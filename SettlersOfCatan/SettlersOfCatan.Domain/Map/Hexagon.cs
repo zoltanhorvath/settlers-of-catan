@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
 using SettlersOfCatan.Domain.Enums;
 using SettlersOfCatan.Domain.Map;
 
@@ -10,7 +6,7 @@ namespace SettlersOfCatan.Domain
 {
     public class Hexagon : IdentifiableBase
     {
-        private bool IsInitialized;
+        private bool IsBuilt;
         public Coordinates Coordinates { get; set; }
 
         public TerrainType Terrain { get; set; }
@@ -28,37 +24,40 @@ namespace SettlersOfCatan.Domain
         public void ProduceResource()
         {
             if (!HasRobber)
-                foreach (var vertex in Vertices)
-                    vertex.Settlement.ProduceResource(Terrain);
-        }
-
-        public void G(MapSettings mapSetting)
-        {
-            if (!IsInitialized)
             {
-                CreateOrAssignNeighbors(mapSetting);
-                CreateOrAssignVerticesAndEdgesFromNeighbour();
-                ConnectVerticesAndEdges();
-                IsInitialized = true;
-                Console.WriteLine(ToString());
-                foreach (var neighbor in Neighbours) neighbor?.G(mapSetting);
+                foreach (var vertex in Vertices)
+                {
+                    vertex.Settlement?.ProduceResource(Terrain);
+                }
             }
         }
 
-        private void CreateOrAssignNeighbors(MapSettings mapSettings)
+        public void Build(MapSupervisor mapSupervisor)
+        {
+            if (!IsBuilt)
+            {
+                CreateOrAssignNeighbors(mapSupervisor);
+                CreateOrAssignVerticesAndEdgesFromNeighbour();
+                ConnectVerticesAndEdges();
+                IsBuilt = true;
+                foreach (var neighbor in Neighbours) neighbor?.Build(mapSupervisor);
+            }
+        }
+
+        private void CreateOrAssignNeighbors(MapSupervisor mapSupervisor)
         {
             foreach (Direction direction in Enum.GetValues(typeof(Direction)))
             {
                 var directionAsInt = (int)direction;
                 var neighborHexagonCoordinates = direction.GetNeighbourCoordinates(Coordinates);
-                if (neighborHexagonCoordinates.IsWithinBoudaries(mapSettings))
+                if (neighborHexagonCoordinates.IsWithinBoudaries(mapSupervisor.MapSettings))
                 {
                     var alreadyExists =
-                        mapSettings.Map.TryGetValue(neighborHexagonCoordinates, out var neighborHexagon);
+                        mapSupervisor.Map.TryGetValue(neighborHexagonCoordinates, out var neighborHexagon);
                     if (!alreadyExists)
                     {
                         neighborHexagon = new Hexagon { Coordinates = neighborHexagonCoordinates };
-                        mapSettings.Map.Add(neighborHexagonCoordinates, neighborHexagon);
+                        mapSupervisor.Map.Add(neighborHexagonCoordinates, neighborHexagon);
                     }
 
                     Neighbours[directionAsInt] = neighborHexagon;
@@ -105,20 +104,5 @@ namespace SettlersOfCatan.Domain
             if (offset < 0) return (6 + offset + i) % 6;
             return (i + offset) % 6;
         }
-    }
-
-    public class MapSettings
-    {
-        public MapSettings(int minimumCoordinateValue, int maximumCoordinateValue)
-        {
-            MinimumCoordinateValue = minimumCoordinateValue;
-            MaximumCoordinateValue = maximumCoordinateValue;
-        }
-
-        public int MinimumCoordinateValue { get; }
-
-        public int MaximumCoordinateValue { get; }
-
-        public SortedDictionary<Coordinates, Hexagon> Map { get; } = new SortedDictionary<Coordinates, Hexagon>();
     }
 }

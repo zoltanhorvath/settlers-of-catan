@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
 using SettlersOfCatan.Domain.Map;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,12 +17,9 @@ namespace SettlersOfCatan.Domain.Test
         [Fact]
         public void Test()
         {
-            var creator = new RMapCreator();
-            var mapSettings = creator.Create();
-            var json = JsonConvert.SerializeObject(mapSettings.Map, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+            var mapSupervisor = new MapSupervisor( new MapSettings());
+            var hexagon = new Hexagon { Coordinates = new Coordinates { X = 0, Y = 0, Z = 0 } };
+            output.WriteLine(hexagon.ToString());
         }
     }
 }

@@ -51,5 +51,13 @@ namespace SettlersOfCatan.Domain.Map
                 && Z >= mapSettings.MinimumCoordinateValue && Z <= mapSettings.MaximumCoordinateValue;
         }
 
+        public override string ToString()
+        {
+            return @$"{{
+                x: {X}, 
+                y: {Y}, 
+                z: {Z}
+            }}";
+        }
     }
 }
