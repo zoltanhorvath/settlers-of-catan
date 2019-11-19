@@ -1,0 +1,14 @@
+﻿<div id="sidebar-container">
+    <h3 class="text-white">Settlers of Catan</h3>
+    <Player />
+    <Resources />
+    <DevelopmentCards />
+    <Log Logs="@Logs"/>
+</div>
+
+@code {
+
+    [Parameter]
+    public IEnumerable<string> Logs { get; set; }
+
+}

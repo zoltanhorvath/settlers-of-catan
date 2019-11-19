@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SettlersOfCatan.Domain.Map;
 using Xunit;
 using Xunit.Abstractions;
@@ -17,9 +19,20 @@ namespace SettlersOfCatan.Domain.Test
         [Fact]
         public void Test()
         {
-            var mapSupervisor = new MapSupervisor( new MapSettings());
-            var hexagon = new Hexagon { Coordinates = new Coordinates { X = 0, Y = 0, Z = 0 } };
-            output.WriteLine(hexagon.ToString());
+            var mapSupervisor = new MapSupervisor(new MapSettings());
+            mapSupervisor.Create();
+
+            var jArray = new JArray();
+            foreach (var keyValuePair in mapSupervisor.Map)
+            {
+                var hexagonJObject = new JObject
+                {
+                    {nameof(Hexagon), keyValuePair.Value.ToJToken() }
+                };
+                jArray.Add(hexagonJObject);
+
+            }
+            output.WriteLine(jArray.ToString());
         }
     }
 }

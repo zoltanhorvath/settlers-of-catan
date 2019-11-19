@@ -1,0 +1,32 @@
+#sidebar-container {
+    background-color: #bd5d38;
+    height: 100vh;
+    padding: 20px;
+    width: 400px;
+    overflow-y: auto;
+}
+
+#board-container {
+    height: 100vh;
+    width: calc(100vw - 400px);
+}
+
+#messages {
+    height: 200px;
+}
+
+.card {
+    margin: 10px 0 10px 0;
+}
+
+.resource-img {
+    width: 40px;
+}
+
+.icon-size {
+    font-size: 20px;
+}
+
+.building-img {
+    width: 50px;
+}

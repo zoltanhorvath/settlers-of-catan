@@ -15,7 +15,7 @@
         Wool,
         Ore,
         Grain,
-        Lumber,     
+        Lumber,
         Nothing
     }
 
@@ -26,8 +26,9 @@
         Settlement
     }
 
-    public enum TradingCapabilityType
+    public enum TradingCapability
     {
+        None,
         Brick,
         Wool,
         Ore,
@@ -35,8 +36,8 @@
         Lumber,
         FourToOne,
         ThreeToOne,
-        None
     }
+
     public enum Direction
     {
         NorthEast,
@@ -45,5 +46,12 @@
         SouthWest,
         West,
         NorthWest
+    }
+
+    public enum GamePhase
+    {
+        SettingUp,
+        Playing,
+        Ending
     }
 }

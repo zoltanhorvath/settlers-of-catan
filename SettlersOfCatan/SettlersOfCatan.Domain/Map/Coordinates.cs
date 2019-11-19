@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json.Linq;
 
 namespace SettlersOfCatan.Domain.Map
 {
@@ -44,20 +45,22 @@ namespace SettlersOfCatan.Domain.Map
             return HashCode.Combine(X, Y, Z);
         }
 
-        public bool IsWithinBoudaries(MapSettings mapSettings)
+        public bool IsWithinBoundaries(MapSettings mapSettings)
         {
             return X >= mapSettings.MinimumCoordinateValue && X <= mapSettings.MaximumCoordinateValue
                 && Y >= mapSettings.MinimumCoordinateValue && Y <= mapSettings.MaximumCoordinateValue
                 && Z >= mapSettings.MinimumCoordinateValue && Z <= mapSettings.MaximumCoordinateValue;
         }
 
-        public override string ToString()
+        public JToken ToJToken()
         {
-            return @$"{{
-                x: {X}, 
-                y: {Y}, 
-                z: {Z}
-            }}";
+            var jObject = new JObject
+            {
+                { nameof(X), X },
+                { nameof(Y), Y },
+                { nameof(Z), Z }
+            };
+            return jObject;
         }
     }
 }

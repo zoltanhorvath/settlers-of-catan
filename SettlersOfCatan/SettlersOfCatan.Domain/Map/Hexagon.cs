@@ -1,12 +1,13 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
 using SettlersOfCatan.Domain.Enums;
-using SettlersOfCatan.Domain.Map;
 
-namespace SettlersOfCatan.Domain
+namespace SettlersOfCatan.Domain.Map
 {
     public class Hexagon : IdentifiableBase
     {
-        private bool IsBuilt;
+        private bool _isBuilt;
+
         public Coordinates Coordinates { get; set; }
 
         public TerrainType Terrain { get; set; }
@@ -34,12 +35,12 @@ namespace SettlersOfCatan.Domain
 
         public void Build(MapSupervisor mapSupervisor)
         {
-            if (!IsBuilt)
+            if (!_isBuilt)
             {
                 CreateOrAssignNeighbors(mapSupervisor);
                 CreateOrAssignVerticesAndEdgesFromNeighbour();
                 ConnectVerticesAndEdges();
-                IsBuilt = true;
+                _isBuilt = true;
                 foreach (var neighbor in Neighbours) neighbor?.Build(mapSupervisor);
             }
         }
@@ -50,7 +51,7 @@ namespace SettlersOfCatan.Domain
             {
                 var directionAsInt = (int)direction;
                 var neighborHexagonCoordinates = direction.GetNeighbourCoordinates(Coordinates);
-                if (neighborHexagonCoordinates.IsWithinBoudaries(mapSupervisor.MapSettings))
+                if (neighborHexagonCoordinates.IsWithinBoundaries(mapSupervisor.MapSettings))
                 {
                     var alreadyExists =
                         mapSupervisor.Map.TryGetValue(neighborHexagonCoordinates, out var neighborHexagon);
@@ -104,5 +105,42 @@ namespace SettlersOfCatan.Domain
             if (offset < 0) return (6 + offset + i) % 6;
             return (i + offset) % 6;
         }
+
+        public JToken ToJToken()
+        {
+            var verticesJArray = new JArray();
+            foreach (var vertex in Vertices)
+            {
+                verticesJArray.Add(vertex.ToJToken());
+            }
+
+            var edgesJArray = new JArray();
+            foreach (var edge in Edges)
+            {
+                edgesJArray.Add(edge.ToJToken());
+            }
+            var neighborsJArray = new JArray();
+            foreach (var neighbor in Neighbours)
+            {
+                if (neighbor != null)
+                {
+                    neighborsJArray.Add(neighbor.Id);
+                }
+            }
+
+            var jObject = new JObject
+            {
+                { nameof(Id), Id },
+                { nameof(Coordinates), Coordinates.ToJToken() },
+                { nameof(Terrain), Terrain.ToString() },
+                { nameof(HasRobber), HasRobber },
+                { nameof(Neighbours), neighborsJArray },
+                { nameof(Vertices), verticesJArray },
+                { nameof(Edges), edgesJArray }
+            };
+
+            return jObject;
+        }
+
     }
 }

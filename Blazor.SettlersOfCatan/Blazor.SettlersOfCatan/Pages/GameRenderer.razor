@@ -1,0 +1,14 @@
+﻿@using Blazor.SettlersOfCatan.Enums
+@using Blazor.SettlersOfCatan.Pages.Sidebar
+@using Blazor.SettlersOfCatan.Pages.Board
+
+@inherits GameRendererBase
+
+@layout MainLayout
+
+@page "/"
+
+<div class="d-flex">
+    <SidebarContainer Logs="@Logs" />
+    <BoardContainer />
+</div>

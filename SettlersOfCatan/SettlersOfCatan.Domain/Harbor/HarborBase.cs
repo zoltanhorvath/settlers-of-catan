@@ -1,4 +1,5 @@
 ﻿using SettlersOfCatan.Domain.Enums;
+using SettlersOfCatan.Domain.Map;
 
 namespace SettlersOfCatan.Domain.Harbor
 {

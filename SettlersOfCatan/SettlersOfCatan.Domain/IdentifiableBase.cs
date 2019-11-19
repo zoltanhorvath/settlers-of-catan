@@ -5,6 +5,6 @@ namespace SettlersOfCatan.Domain
     public class IdentifiableBase
     {
         private protected Guid _id = Guid.NewGuid();
-        public Guid Id { get { return _id; } }
+        public Guid Id => _id;
     }
 }
